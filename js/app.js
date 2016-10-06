@@ -1,3 +1,5 @@
+'use strict';
+
 // this function takes the question object returned by the StackOverflow request
 // and returns new result to be appended to DOM
 var showQuestion = function(question) {
@@ -30,38 +32,6 @@ var showQuestion = function(question) {
 
 	return result;
 };
-
-var showInspirer = function(question) {
-	
-	// clone our result template code
-	var result = $('.templates .question').clone();
-	
-	// Set the question properties in result
-	var questionElem = result.find('.question-text a');
-	questionElem.attr('href', question.link);
-	questionElem.text(question.title);
-
-	// set the date asked property in result
-	var asked = result.find('.asked-date');
-	var date = new Date(1000*question.creation_date);
-	asked.text(date.toString());
-
-	// set the .viewed for question property in result
-	var viewed = result.find('.viewed');
-	viewed.text(question.view_count);
-
-	// set some properties related to asker
-	var asker = result.find('.asker');
-	asker.html('<p>Name: <a target="_blank" '+
-		'href=http://stackoverflow.com/users/' + question.owner.user_id + ' >' +
-		question.owner.display_name +
-		'</a></p>' +
-		'<p>Reputation: ' + question.owner.reputation + '</p>'
-	);
-
-	return result;
-};
-
 
 // this function takes the results object from StackOverflow
 // and returns the number of results and tags to be appended to DOM
@@ -112,11 +82,38 @@ var getUnanswered = function(tags) {
 	});
 };
 
-var getInspirers = function(tags) {
+
+//////////////////////////////////////////////////////
+
+
+// this function takes the answerer object returned by the StackOverflow request
+// and returns new result to be appended to DOM
+var showInspirer = function(inspirer) {
+	
+	// clone our result/inspirer template code
+	var result = $('.templates .inspirer').clone();
+	
+	// Set the inspirer properties in result
+	var inspirerElem = result.find('.profileLink a');
+	inspirerElem.attr('href', inspirer.link);
+	inspirerElem.text(inspirer.display_name);
+
+	// set the reputation total property in result
+	var reputationPoints = result.find('.reputationTotal');
+	reputationPoints.text(inspirer.reputation);
+
+	// set the user type property in result
+	var userCategory = result.find('.userType');
+	userCategory.text(inspirer.user_type);
+
+	return result;
+};
+
+var getInspirers = function(tagsTwo) {
 	
 	// the parameters we need to pass in our request to StackOverflow's API
 	var request = { 
-		tag: tags,
+		tag: tagsTwo,
 		site: 'stackoverflow',
 		period: 'all_time'
 	};
@@ -128,9 +125,9 @@ var getInspirers = function(tags) {
 		type: "GET",
 	})
 	.done(function(result){ //this waits for the ajax to return with a succesful promise object
-		var searchResults = showSearchResults(request.tag, result.items.length);
+		var searchResults = showSearchResults(request.tag, '30');
 
-		$('.search-results').html(searchResults);
+		$('.results').html(searchResults);
 		//$.each is a higher order function. It takes an array and a function as an argument.
 		//The function is executed once for each item in the array.
 		$.each(result.items, function(i, item) {
@@ -160,7 +157,7 @@ $(document).ready( function() {
 		// zero out results if previous search has run
 		$('.results').html('');
 		// get the value of the tags the user submitted
-		var tags = $(this).find("input[name='tags']").val();
-		getInspirers(tags);
+		var tagsTwo = $(this).find("input[name='answerers']").val();
+		getInspirers(tagsTwo);
 	});
 });
