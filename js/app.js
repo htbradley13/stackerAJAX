@@ -157,4 +157,4 @@ $(document).ready( function() {
 		var tagsTwo = $(this).find("input[name='answerers']").val();
 		getInspirers(tagsTwo);
 	});
-});
+}); 
