@@ -1,5 +1,3 @@
-'use strict';
-
 // this function takes the question object returned by the StackOverflow request
 // and returns new result to be appended to DOM
 var showQuestion = function(question) {
@@ -83,7 +81,6 @@ var getUnanswered = function(tags) {
 };
 
 
-//////////////////////////////////////////////////////
 
 
 // this function takes the answerer object returned by the StackOverflow request
@@ -91,43 +88,43 @@ var getUnanswered = function(tags) {
 var showInspirer = function(inspirer) {
 	
 	// clone our result/inspirer template code
-	var result = $('.templates .inspirer').clone();
+	var resultTwo = $('.templates .inspirer').clone();
 	
 	// Set the inspirer properties in result
-	var inspirerElem = result.find('.profileLink a');
-	inspirerElem.attr('href', inspirer.link);
-	inspirerElem.text(inspirer.display_name);
+	var inspirerElem = resultTwo.find('.profileLink a');
+	inspirerElem.attr('href', inspirer.user.link);
+	inspirerElem.text(inspirer.user.display_name);
 
 	// set the reputation total property in result
-	var reputationPoints = result.find('.reputationTotal');
-	reputationPoints.text(inspirer.reputation);
+	var reputationPoints = resultTwo.find('.reputationTotal');
+	reputationPoints.text(inspirer.user.reputation);
 
 	// set the user type property in result
-	var userCategory = result.find('.userType');
-	userCategory.text(inspirer.user_type);
+	var userCategory = resultTwo.find('.userType');
+	userCategory.text(inspirer.user.user_type);
 
-	return result;
+	return resultTwo;
 };
 
 var getInspirers = function(tagsTwo) {
 	
 	// the parameters we need to pass in our request to StackOverflow's API
-	var request = { 
+	var requestTwo = { 
 		tag: tagsTwo,
 		site: 'stackoverflow',
 		period: 'all_time'
 	};
 	
 	$.ajax({
-		url: "http://api.stackexchange.com/2.2/tags/{tag}/top-answerers/{period}",
-		data: request,
+		url: "http://api.stackexchange.com/2.2/tags/" + requestTwo.tag + "/top-answerers/" + requestTwo.period,
+		data: requestTwo,
 		dataType: "jsonp",//use jsonp to avoid cross origin issues
 		type: "GET",
 	})
 	.done(function(result){ //this waits for the ajax to return with a succesful promise object
-		var searchResults = showSearchResults(request.tag, '30');
+		var searchResults = showSearchResults(requestTwo.tag, result.items.length);
 
-		$('.results').html(searchResults);
+		$('.search-results').html(searchResults);
 		//$.each is a higher order function. It takes an array and a function as an argument.
 		//The function is executed once for each item in the array.
 		$.each(result.items, function(i, item) {
