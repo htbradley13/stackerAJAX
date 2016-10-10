@@ -58,7 +58,7 @@ var getUnanswered = function(tags) {
 	};
 	
 	$.ajax({
-		url: "https://api.stackexchange.com/2.2/questions/unanswered",
+		url: "//api.stackexchange.com/2.2/questions/unanswered",
 		data: request,
 		dataType: "jsonp",//use jsonp to avoid cross origin issues
 		type: "GET",
@@ -116,7 +116,7 @@ var getInspirers = function(tagsTwo) {
 	};
 	
 	$.ajax({
-		url: "https://api.stackexchange.com/2.2/tags/" + requestTwo.tag + "/top-answerers/" + requestTwo.period,
+		url: "//api.stackexchange.com/2.2/tags/" + requestTwo.tag + "/top-answerers/" + requestTwo.period,
 		data: requestTwo,
 		dataType: "jsonp",//use jsonp to avoid cross origin issues
 		type: "GET",
